@@ -1,0 +1,931 @@
+/* Sone Main CSS File */
+
+/* first, override some fproxy rules. */
+#sone div, #sone span, #sone .post .time,#sone .post .delete,#sone .post .show-reply-form, input[type=text], textarea {
+	font: inherit;
+}
+
+input[type=text], textarea {
+	font-size: 90%;
+	margin: 0.5ex;
+	margin-left: 0;
+	border: solid 1px #ccc;
+	padding: 0.5ex;
+	height: 1.5em;
+	width: 50em;
+	outline: none;
+}
+
+input[type=text].short {
+	width: 25em;
+}
+
+textarea {
+	height: 4em;
+}
+
+#sone button {
+	background-color: #ddd;
+	border-width: 1px;
+	color: #444;
+	padding: 0.5ex 1.5ex;
+}
+
+#sone form {
+	margin: 0px;
+}
+
+#sone select {
+	color: #444;
+	padding: 0.5ex 1.5ex;
+}
+
+/* now for the real stuff. */
+
+#sone {
+	width: 55em;
+	margin: auto;
+}
+
+#sone .hidden {
+	display: none;
+}
+
+#sone .toggle-link {
+	margin-top: 1em;
+}
+
+#sone #formPassword {
+	display: none;
+}
+
+#sone a, #sone a:link, #sone a:visited {
+	color: rgb(28, 131, 191);
+	font-size: inherit;
+	text-decoration: none;
+}
+
+#sone a:active, #sone a:hover {
+	color: rgb(255, 172, 0);
+}
+
+#sone a.link {
+	cursor: pointer;
+}
+
+#sone a.internet {
+	color: rgb(255, 0, 0);
+}
+
+#sone a.internet:before {
+	content: '⚠ ';
+}
+
+#sone a.freenet:before {
+	content: '» ';
+}
+
+#sone a.freenet-trusted {
+	color: rgb(0, 128, 0);
+}
+
+#sone a.freenet-trusted:before {
+	content: '★ ';
+}
+
+#sone a.in-page-link:before {
+	content: '↓ ';
+}
+
+#sone a img {
+	border: none;
+}
+
+#sone .small-link {
+	font-size: 85%;
+}
+
+#sone .parsed {
+	white-space: pre-wrap;
+}
+
+#sone #main.offline {
+	opacity: 0.5;
+}
+
+#sone #offline-marker {
+	display: none;
+	position: fixed;
+	top: 2em;
+	right: 2em;
+	width: 128px;
+	height: 128px;
+	background-image: url("../images/sone-offline.png");
+}
+
+#sone #notification-area {
+	margin-top: 1em;
+}
+
+#sone #notification-area .notification {
+	padding: 1ex;
+	border: solid 1px #ccc;
+	background-color: #ffffa0;
+	margin-bottom: 1ex;
+	min-height: 3.5ex;
+}
+
+#sone #notification-area .notification button {
+	margin-left: 1ex;
+}
+
+#sone #notification-area .notification .dismiss {
+	float: right;
+}
+
+#sone #notification-area .notification .post-count {
+	margin-left: 1ex;
+}
+
+#sone #notification-area .notification .mark-as-read {
+	float: right;
+}
+
+#sone #notification-area .notification .hidden {
+	display: none;
+}
+
+#sone #notification-area #local-post-notification, #sone #notification-area #local-reply-notification {
+	display: none;
+}
+
+#sone #plugin-warning {
+	border: solid 0.5em red;
+	padding: 0.5em;
+	margin-bottom: 1em;
+}
+
+#sone #profile {
+	height: 80px;
+	margin-top: 1em;
+	margin-bottom: 1ex;
+}
+
+#sone .profile-avatar {
+	display: inline-block;
+	width: 80px;
+	height: 80px;
+	overflow: hidden;
+	position: absolute;
+}
+
+#sone .profile-link {
+	font-weight: bold;
+	color: rgb(28, 131, 191);
+}
+
+#sone #profile.online .picture {
+	position: absolute;
+}
+
+#sone #profile.offline .picture {
+	position: absolute;
+}
+
+#sone #profile.offline .edit-profile-link, #sone #profile.offline .profile-link {
+	display: none;
+}
+
+#sone #profile .edit-profile-link {
+	font-size: 85%;
+}
+
+#sone #home-sone {
+	margin-top: 1ex;
+	margin-left: 80px;
+	padding-left: 1ex;
+}
+
+#sone #update-status {
+	margin-bottom: 1em;
+}
+
+#sone #update-status label, #sone #post-message label {
+	display: none;
+}
+
+#sone #update-status input[type=text] {
+	width: 45em;
+}
+
+#sone #update-status textarea {
+	width: 45em;
+}
+
+#sone #update-status button {
+	float: right;
+}
+
+#sone #update-status .select-sender, #sone .create-reply .select-sender, #sone #post-message .select-sender {
+	display: none;
+}
+
+#sone #update-status .select-sender button, #sone #post-message .select-sender button {
+	display: inline;
+	float: left;
+}
+
+#sone .nice-name {
+	font-weight: bold;
+}
+
+#sone #main {
+	padding: 1em;
+	padding-top: 0px;
+}
+
+#sone #edit-profile #birth-day, #sone #edit-profile #birth-month, #sone #edit-profile #birth-year {
+	display: inline;
+	width: 15em;
+}
+
+#sone #edit-profile #birth-day input, #sone #edit-profile #birth-month input, #sone #edit-profile #birth-year input {
+	width: 4em;
+	text-align: right;
+}
+
+#sone td.numeric {
+	text-align: right;
+}
+
+#sone .post {
+	padding: 1ex 0px;
+	border-bottom: solid 1px #ccc;
+	clear: both;
+	position: relative;
+}
+
+#sone .post.new {
+	background-color: #ffffa0;
+	padding-left: 1ex;
+}
+
+#sone .post.last {
+	padding: 1ex 0px;
+	border-bottom: none;
+}
+
+#sone .post .sone-menu {
+	position: absolute;
+	top: 0;
+	left: -1ex;
+	padding: 1ex 1ex;
+	margin: -1px -1px;
+	display: none;
+	background-color: rgb(255, 255, 224);
+	border: solid 1px rgb(0, 0, 0);
+	z-index: 1;
+}
+
+#sone .post .sone-menu .avatar {
+	position: absolute;
+	margin-right: 1ex;
+}
+
+#sone .menu-avatar {
+	display: inline-block;
+	width: 64px;
+	height: 64px;
+	overflow: hidden;
+}
+
+#sone .post .sone-menu .inner-menu {
+	margin-left: 64px;
+	padding-left: 1ex;
+	min-height: 64px;
+}
+
+#sone .sone-menu .follow, #sone .sone-menu .unfollow {
+	cursor: pointer;
+}
+
+#sone .post > .avatar {
+	position: absolute;
+}
+
+#sone .post-avatar {
+	display: inline-block;
+	width: 48px;
+	height: 48px;
+	overflow: hidden;
+}
+
+#sone .post > .inner-part {
+	margin-left: 48px;
+	padding-left: 0.5em;
+	min-height: 48px;
+}
+
+#sone .post .author, #sone .post .recipient {
+	display: inline;
+	font-weight: bold;
+}
+
+#sone .post .author-wot-link {
+	font-size: 90%;
+}
+
+#sone .post .text, #sone .post .raw-text, #sone .post .short-text {
+	display: inline;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+}
+
+#sone .post .text.hidden, #sone .post .raw-text.hidden, #sone .post .short-text.hidden {
+	display: none;
+}
+
+#sone .post .expand-post-text:before, #sone .post .expand-reply-text:before {
+	content: "» ";
+}
+
+#sone .post .shrink-post-text:before, #sone .post .shrink-reply-text:before {
+	content: "« ";
+}
+
+#sone .post .shrink-post-text {
+	cursor: pointer;
+}
+
+#sone .post .status-line {
+	margin-top: 0.5ex;
+	font-size: 85%;
+}
+
+#sone .separator {
+	font: inherit;
+	color: rgb(28, 131, 191);
+}
+
+#sone .show-source, #sone .show-reply-source {
+	display: inline;
+}
+
+#sone .permalink {
+	display: inline;
+}
+
+#sone .post .bookmarks {
+	display: inline;
+	color: rgb(28, 131, 191);
+}
+
+#sone .post .bookmark, #sone .post .unbookmark {
+	display: inline;
+	font: inherit;
+	margin: 0px;
+}
+
+#sone .post .time {
+	display: inline;
+	color: #666;
+}
+
+#sone .post .delete, #sone .post .likes, #sone .post .like, #sone .post .unlike, #sone .post .wot-link {
+	display: inline;
+	font: inherit;
+	margin: 0px;
+}
+
+#sone .post .likes.hidden {
+	display: none;
+}
+
+#sone .post .like.hidden, #sone .post .unlike.hidden, #sone .post .bookmark.hidden, #sone .post .unbookmark.hidden {
+	display: none;
+}
+
+#sone .post .delete button, #sone .post .like button, #sone .post .unlike button, #sone .post .bookmark button, #sone .post .unbookmark button {
+	border: 0px;
+	background: none;
+	padding: 0px;
+	color: rgb(28, 131, 191);
+	font: inherit;
+	margin: 0px;
+}
+
+#sone .post .delete button.confirm {
+	color: red;
+	font-weight: bold;
+}
+
+#sone .post .delete button:hover, #sone .post .like button:hover, #sone .post .unlike button:hover, #sone .post .bookmark button:hover, #sone .post .unbookmark button:hover {
+	border: 0px;
+	background: none;
+	padding: 0px;
+	color: rgb(255, 172, 0);
+	cursor: pointer;
+}
+
+#sone .post .likes span {
+	font: inherit;
+	color: green;
+}
+
+#sone .post .linked-elements {
+	margin-top: 1ex;
+}
+
+#sone .linked-element.loaded .image {
+	display: inline-block;
+	border: solid 1px black;
+	width: 160px;
+	height: 120px;
+	background-size: cover;
+	background-position: center;
+	margin-right: 1ex;
+	margin-bottom: 1ex;
+}
+
+#sone .linked-element.loaded .html-page {
+	display: inline-block;
+	width: 160px;
+	max-height: 120px;
+	overflow: hidden;
+	vertical-align: top;
+}
+
+#sone .reply .linked-element.loaded .html-page {
+	width: 120px;
+	max-height: 90px;
+}
+
+#sone .linked-element.loaded .html-page .heading {
+	font-size: 115%;
+	font-weight: 600;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+#sone .linked-element.loaded .html-page .description {
+	font-size: 85%;
+}
+
+#sone .linked-element.loaded .html-page {
+	display: inline-block;
+}
+
+#sone .post .replies {
+	clear: both;
+	padding-top: 0.2ex;
+}
+
+#sone .post .replies .click-to-show {
+	background-color: #f0f0ff;
+	font-size: 85%;
+	padding: 0.5em;
+	cursor: pointer;
+}
+
+#sone .post .replies .click-to-show.new {
+	background-color: #ffffa0;
+}
+
+#sone .post .reply > .avatar {
+	position: absolute;
+}
+
+#sone .reply-avatar {
+	display: inline-block;
+	width: 36px;
+	height: 36px;
+	overflow: hidden;
+}
+
+#sone .post .reply > .inner-part {
+	margin-left: 36px;
+	padding-left: 0.5em;
+	min-height: 36px;
+}
+
+#sone .post .reply {
+	position: relative;
+	clear: both;
+	background-color: #f0f0ff;
+	margin: 1ex 0px;
+	padding: 1ex;
+}
+
+#sone .post .reply .inner-part {
+	font-size: 85%;
+}
+
+#sone .post .reply.new {
+	background-color: #ffffa0;
+}
+
+#sone .post .reply .time {
+	float: none;
+	display: inline;
+	color: #666;
+	font-size: inherit;
+}
+
+#sone .post .reply .linked-elements {
+	margin-top: 1ex;
+}
+
+#sone .post .reply .linked-element.loaded .image {
+	display: inline-block;
+	border: solid 1px black;
+	width: 120px;
+	height: 90px;
+	background-size: cover;
+	background-position: center;
+	margin-right: 1ex;
+	margin-bottom: 1ex;
+}
+
+#sone .post .show-reply-form {
+	display: inline;
+}
+
+#sone .post .show-reply-form span {
+	color: rgb(28, 131, 191);
+	cursor: pointer;
+	font: inherit;
+}
+
+#sone .post .show-reply-form span:hover {
+	color: rgb(255, 172, 0);
+}
+
+#sone .post .create-reply {
+	clear: both;
+	background-color: #f0f0ff;
+	padding: 0.5ex;
+}
+
+#sone .post .create-reply input[type=text] {
+	margin-left: 0.5ex;
+	width: 42em;
+}
+
+#sone .post .create-reply textarea {
+	margin-left: 0.5ex;
+	width: 42em;
+	height: 4em;
+}
+
+#sone .post .create-reply button {
+	float: right;
+}
+
+#sone .create-reply .select-sender button, #sone #post-message .select-sender button {
+	display: inline;
+	float: left;
+}
+
+#sone .sone {
+	clear: both;
+	background-color: #f0f0ff;
+	border: 1px solid #ccc;
+	margin-bottom: 0.5ex;
+	padding: 0.5ex;
+}
+
+#sone .sone.local {
+	background-color: #f0fff0;
+}
+
+#sone .sone.new {
+	background-color: #ffffa0;
+}
+
+#sone .sone .profile-link {
+	display: inline;
+}
+
+#sone .sone .sone-stats {
+	display: inline;
+}
+
+#sone .sone .short-request-uri {
+	clear: both;
+	float: right;
+}
+
+#sone .sone .unknown-marker, #sone .sone .download-marker, #sone .sone .insert-marker, #sone .sone .idle-marker, #sone .sone .modified-marker {
+	display: none;
+}
+
+#sone .sone.unknown .unknown-marker, #sone .sone.idle .idle-marker, #sone .sone.downloading .download-marker, #sone .sone.inserting .insert-marker, #sone .sone.modified .modified-marker {
+	display: inline;
+	float: right;
+	border: solid 1px #ccc;
+	border-right: none;
+	border-top: none;
+	padding: 0 0.5ex;
+	position: relative;
+	right: -0.5ex;
+	top: -0.5ex
+}
+
+#sone .sone.idle.modified .idle-marker {
+	display: none;
+}
+
+#sone .sone .last-update {
+	float: right;
+	display: inline;
+}
+
+#sone .sone .modified-marker, #sone .sone .unknown-marker {
+	color: red;
+	font-weight: bold;
+}
+
+#sone .sone form.follow, #sone .sone form.unfollow, #sone .sone form.lock, #sone .sone form.unlock {
+	display: inline;
+	border: solid 1px #ccc;
+	border-left: none;
+	border-bottom: none;
+	padding: 0 0.5ex;
+	position: relative;
+	left: -0.5ex;
+	bottom: -0.5ex
+}
+
+#sone .sone form.follow button, #sone .sone form.unfollow button, #sone .sone form.lock button, #sone .sone form.unlock button {
+	display: inline;
+	color: rgb(28, 131, 191);
+	background: none;
+	border: none;
+	font: inherit;
+	padding: 0px;
+}
+
+#sone .sone form.follow button:hover, #sone .sone form.unfollow button:hover, #sone .sone form.lock button:hover, #sone .sone form.unlock button:hover {
+	display: inline;
+	color: rgb(255, 172, 0);
+}
+
+#sone .sone.locked form.lock, #sone .sone.unlocked form.unlock {
+	display: none;
+}
+
+#sone .sone form.hidden {
+	display: none;
+}
+
+#sone .sone .spacer {
+	display: inline;
+}
+
+#sone .profile-field, #sone #edit-profile button[type=submit], #sone #delete-profile-field {
+	margin-top: 1em;
+}
+
+#sone .profile-field .name {
+	display: inline;
+	font-weight: bold;
+}
+
+#sone .profile-field .name.hidden {
+	display: none;
+}
+
+#sone .profile-field button.confirm.edit {
+	font-weight: bold;
+	color: #080;
+}
+
+#sone .profile-field button.cancel {
+	font-weight: bold;
+	color: red;
+}
+
+#sone .profile-field .value {
+	margin-left: 2em;
+}
+
+#sone #edit-profile .profile-field .value {
+	margin-left: inherit;
+}
+
+#sone .profile-field .edit-field-name, #sone .profile-field .move-up-field, #sone .profile-field .move-down-field, #sone .profile-field .delete-field-name {
+	float: right;
+	margin-top: -1ex;
+	position: relative;
+}
+
+#sone .backlinks {
+	font-size: 80%;
+	margin-bottom: 1em;
+}
+
+#sone .backlinks .backlink {
+	display: inline;
+}
+
+#sone .album {
+}
+
+#sone .image-row, #sone .album-row {
+	display: table-row;
+}
+
+#sone .image-container, #sone .album-container {
+	width: 250px;
+	height: 250px;
+	overflow: hidden;
+	padding: -1px;
+	border: solid 1px #000;
+}
+
+#sone .image, #sone .album {
+	display: table-cell;
+	vertical-align: top;
+	text-align: center;
+	padding: 0.5ex;
+}
+
+#sone .single-image img {
+	border: solid 1px #000;
+	background-color: #fff;
+}
+
+#sone .image .edit-image input, #sone .album .edit-album input {
+	width: 95%;
+}
+
+#sone .image .edit-image textarea, #sone .album .edit-album textarea {
+	width: 95%;
+}
+
+#sone .image .album-sone {
+	font-size: 80%;
+}
+
+#sone .image .image-title, #sone .album .album-title {
+	font-weight: bold;
+}
+
+#sone .image .image-description, #sone .album .album-description {
+	text-align: left;
+	width: 98%;
+	word-wrap: break-word;
+	max-height: 5em;
+	overflow: auto;
+}
+
+#sone .backlinks .separator {
+	display: inline;
+}
+
+#sone #search {
+	text-align: right;
+}
+
+#sone #search input[type=text] {
+	width: 35em;
+}
+
+#sone #sone-results + #sone #post-results {
+	clear: both;
+	padding-top: 1em;
+}
+
+#sone #tail {
+	margin-top: 1em;
+	border-top: solid 1px #ccc;
+	padding-top: 2em;
+	text-align: center;
+	font-size: 75%;
+	color: #888;
+}
+
+#sone #tail #version-information {
+	margin-top: 1em;
+}
+
+#sone #add-sone textarea, #sone #create-sone textarea, #sone #load-sone textarea, #sone #edit-profile textarea {
+	height: 1.5em;
+}
+
+#sone #add-sone button {
+	position: absolute;
+}
+
+#sone .navigation {
+	text-align: center;
+}
+
+#sone .navigation .first a, #sone .navigation .previous a, #sone .navigation .next a, #sone .navigation .last a, #sone .navigation .first span, #sone .navigation .previous span, #sone .navigation .next span, #sone .navigation .last span {
+	display: block;
+	height: 1.5em;
+	padding: 0.5ex;
+	width: 3em;
+	border: solid 1px #ccc;
+	background-color: #f0f0ff;
+	margin: 1ex 0;
+}
+
+#sone .navigation .first, #sone .navigation .previous {
+	float: left;
+}
+
+#sone .navigation .current-page, #sone .navigation .total-pages {
+	position: relative;
+	top: 0.5em;
+	margin-top: 0.5ex;
+	display: inline;
+}
+
+#sone .navigation .total-pages:before {
+	content: '/ ';
+}
+
+#sone .navigation .next, #sone .navigation .last {
+	float: right;
+}
+
+#sone .clear {
+	clear: both;
+}
+
+#sone h1 {
+	font-family: inherit;
+	font-size: 200%;
+	font-weight: bold;
+	clear: both;
+}
+
+#sone h1.backlink {
+	margin-bottom: 0px;
+}
+
+#sone h2 {
+	font-family: inherit;
+	font-size: 150%;
+	font-weight: bold;
+	clear: both;
+}
+
+#sone .error label {
+	color: red;
+	font-weight: bold;
+}
+
+#sone input.default, #sone textarea.default {
+	color: #888;
+}
+
+#sone input[type=text].key {
+	width: 130ex;;
+	font-size: 75%;
+}
+
+#sone .confirm {
+	font-weight: bold;
+	color: red;
+}
+
+#sone .warning {
+	color: red;
+	font-style: italic;
+}
+
+#sone #sort-options {
+	margin-bottom: 1em;
+}
+
+#sone ul#avatar-selection {
+	padding: 0;
+}
+
+#sone #avatar-selection li {
+	display: inline-block;
+}
+
+#sone #avatar-selection li .post-avatar {
+	vertical-align: middle;
+	margin-top: 0.5em;
+}
+
+#sone #avatar-selection li#no-avatar {
+	display: block;
+}
+
+#sone form#options ul {
+	padding-left: 1em;
+}
+
+#sone form#options li {
+	list-style-type: none;
+}
+
+#sone table thead tr {
+	font-weight: bold;
+}

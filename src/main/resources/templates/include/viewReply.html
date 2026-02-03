@@ -1,0 +1,81 @@
+<div id="reply-<% reply.id|html>" class="reply<%if !reply.sone.local><%if reply.new> new<%/if><%/if>">
+	<a name="reply-<% reply.id|html>"></a>
+	<div class="reply-time hidden"><% reply.time|html></div>
+	<div class="reply-author hidden"><% reply.sone.id|html></div>
+	<div class="reply-author-local hidden"><% reply.sone.local></div>
+	<%include include/soneMenu.html class=="sone-reply-menu" sone=reply.sone>
+	<div class="avatar reply-avatar">
+		<%ifnull !reply.sone.profile.avatar>
+			<% reply.sone.profile.avatar|image-link max-width==36 max-height==36 mode==enlarge title=="Avatar Image">
+		<%else>
+			<img src="/WebOfTrust/GetIdenticon?identity=<% reply.sone.id|html>&amp;width=72&height=72" width="36" height="36" alt="Avatar Image" />
+		<%/if>
+	</div>
+	<div class="inner-part">
+		<div>
+			<div class="author profile-link"><a href="viewSone.html?sone=<% reply.sone.id|html>"><% reply.sone.niceName|html></a></div>
+			<% reply.text|html|store key==originalText text==true>
+			<% reply.text|parse sone=reply.sone|store key==parsedText>
+			<% parsedText|render|store key==renderedText text==true>
+			<% parsedText|shorten length=preferences.charactersPerPost cut-off-length=preferences.postCutOffLength|render|store key==shortText text==true>
+			<div class="reply-text raw-text<%if !raw> hidden<%/if>"><% originalText></div>
+			<div class="reply-text text<%if raw> hidden<%/if><%if !shortText|match key=renderedText> hidden<%/if>"><% renderedText></div>
+			<div class="reply-text short-text<%if raw> hidden<%/if><%if shortText|match key=renderedText> hidden<%/if>"><% shortText></div>
+			<%if !shortText|match value=renderedText><%if !raw><a class="expand-reply-text" href="viewPost.html?post=<% reply.postId|html>&amp;raw=true"><%= View.Post.ShowMore|l10n|html></a><%/if><%/if>
+			<%if !shortText|match value=renderedText><%if !raw><a class="shrink-reply-text hidden"><%= View.Post.ShowLess|l10n|html></a><%/if><%/if>
+			<% parsedText|linked-elements sone=reply.sone|store key==linkedElements>
+			<% foreach linkedElements linkedElement>
+				<%if !linkedElement.failed>
+					<% first>
+						<div class="linked-elements">
+					<%/first>
+					<% linkedElement|render-linked-element>
+					<% last>
+						</div>
+					<%/last>
+				<%/if>
+			<%/foreach>
+		</div>
+		<div class="reply-status-line status-line">
+			<div class="time"><% reply.time|date format=="MMM d, yyyy, HH:mm:ss"></div>
+			<span class='separator'>·</span>
+			<div class="permalink permalink-author"><a href="sone://<%reply.sone.id|html>">[<%= View.Post.PermalinkAuthor|l10n|html>]</a></div>
+			<%if ! originalText|match value=renderedText>
+				<span class='separator'>·</span>
+				<div class="show-reply-source"><a href="viewPost.html?post=<% post.id|html>&amp;raw=<%if raw>false<%else>true<%/if>"><%= View.Post.ShowSource|l10n|html></a></div>
+			<%/if>
+			<div class="likes<%if reply.likes.size|match value==0> hidden<%/if>">
+				<span class='separator'>·</span>
+				<span title="<% reply.likes.soneNames|html>">↑<span class="like-count"><% reply.likes.size></span></span>
+			</div>
+			<%ifnull ! currentSone>
+				<span class='separator'>·</span>
+				<form class="like like-reply<%if reply.liked> hidden<%/if>" action="like.html" method="post">
+					<input type="hidden" name="formPassword" value="<% formPassword|html>" />
+					<input type="hidden" name="returnPage" value="<% request.uri|html>" />
+					<input type="hidden" name="type" value="reply" />
+					<input type="hidden" name="reply" value="<% reply.id|html>" />
+					<button type="submit" value="1"><%= View.Post.LikeLink|l10n|html></button>
+				</form>
+				<form class="unlike unlike-reply<%if ! reply.liked> hidden<%/if>" action="unlike.html" method="post">
+					<input type="hidden" name="formPassword" value="<% formPassword|html>" />
+					<input type="hidden" name="returnPage" value="<% request.uri|html>" />
+					<input type="hidden" name="type" value="reply" />
+					<input type="hidden" name="reply" value="<% reply.id|html>" />
+					<button type="submit" value="1"><%= View.Post.UnlikeLink|l10n|html></button>
+				</form>
+			<%/if>
+			<span class='separator'>·</span>
+			<a class="wot-link" href="/WebOfTrust/ShowIdentity?id=<% reply.sone.id|html>"><%= View.Post.WebOfTrustLink|l10n|html></a>
+			<%if reply.sone.local>
+				<span class='separator'>·</span>
+				<form class="delete delete-reply" action="deleteReply.html" method="post">
+					<input type="hidden" name="formPassword" value="<% formPassword|html>" />
+					<input type="hidden" name="returnPage" value="<% request.uri|html>" />
+					<input type="hidden" name="reply" value="<% reply.id|html>" />
+					<button type="submit"><%= View.Post.Reply.DeleteLink|l10n|html></button>
+				</form>
+			<%/if>
+		</div>
+	</div>
+</div>

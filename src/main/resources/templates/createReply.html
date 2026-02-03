@@ -1,0 +1,25 @@
+<%include include/head.html>
+
+	<h1><%= Page.CreateReply.Page.Title|l10n|html></h1>
+
+	<%if errorTextEmpty>
+		<p><%= Page.CreateReply.Error.EmptyText|l10n|html></p>
+	<%/if>
+
+	<form method="post">
+		<input type="hidden" name="formPassword" value="<% formPassword|html>" />
+		<input type="hidden" name="returnPage" value="<% returnPage|html>" />
+		<input type="hidden" name="post" value="<% postId>" />
+
+		<div>
+			<label for="text"><%= Page.CreateReply.Label.Text|l10n|html></label>
+			<textarea name="text"><% text|html></textarea>
+		</div>
+
+		<div>
+			<button type="submit"><%= Page.CreateReply.Button.Post|l10n|html></button>
+		</div>
+
+	</form>
+
+<%include include/tail.html>

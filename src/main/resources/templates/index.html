@@ -1,0 +1,21 @@
+<%include include/head.html>
+
+	<div class="page-id hidden">index</div>
+
+	<h1><%= Page.Index.PostList.Title|l10n|html></h1>
+
+	<%include include/updateStatus.html>
+
+	<div id="posts">
+		<%include include/pagination.html pageParameter==page paginationName==pagination-index>
+		<%foreach pagination.items post>
+			<%include include/viewPost.html>
+		<%foreachelse>
+			<p><%= Page.Index.PostList.Text.NoPostYet|l10n|html></p>
+			<p><%= Page.Index.PostList.Text.FollowSomeSones|l10n|html|replace needle=='{link}' replacement=='<a href="knownSones.html">'|replace needle=='{/link}' replacement=='</a>'></p>
+			<p><%= Page.Index.PostList.Text.AutoFollowOption|l10n|html|replace needle=='{link}' replacement=='<a href="options.html">'|replace needle=='{/link}' replacement=='</a>'></p>
+		<%/foreach>
+		<%include include/pagination.html pageParameter==page>
+	</div>
+
+<%include include/tail.html>

@@ -1,0 +1,17 @@
+<%include include/head.html>
+
+	<h1><%= Page.DeleteSone.Page.Title|l10n|replace needle=="{sone}" replacement=currentSone.name|html></h1>
+
+	<p><%= Page.DeleteSone.Page.Description|l10n|html></p>
+
+	<form method="post">
+		<input type="hidden" name="formPassword" value="<% formPassword|html>" />
+		<div>
+			<button type="submit" name="deleteSone" value="1"><%= Page.DeleteSone.Button.Yes|l10n|html></button>
+		</div>
+		<div>
+			<button type="submit"><%= Page.DeleteSone.Button.No|l10n|html></button>
+		</div>
+	</form>
+
+<%include include/tail.html>

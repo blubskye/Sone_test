@@ -1,0 +1,23 @@
+<%include include/head.html>
+
+	<div class="page-id hidden">switch-profile</div>
+
+	<h1><%= Page.SwitchProfile.Page.Title|l10n|html></h1>
+
+	<%if !sones.empty>
+		<p><%= Page.SwitchProfile.Text.CurrentProfile|l10n|html></p>
+		<form method="post">
+			<input type="hidden" name="formPassword" value="<% formPassword|html>" />
+			<label for="sone-id"><%= Page.SwitchProfile.Label.SelectSone|l10n|html></label>
+			<select name="sone-id">
+				<%foreach sones sone>
+					<option value="<% sone.id|html>"<%if sone.id|match value=currentSoneId> selected="selected"<%/if>><% sone.niceName|html> (<% sone.name|html>)</option>
+				<%/foreach>
+			</select>
+			<button type="submit"><%= Page.SwitchProfile.Button.Switch|l10n|html></button>
+		</form>
+	<%else>
+		<p><%= Page.SwitchProfile.Text.NoOtherSones|l10n|html></p>
+	<%/if>
+
+<%include include/tail.html>

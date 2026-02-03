@@ -1,0 +1,92 @@
+<%include include/head.html>
+
+	<div class="page-id hidden">known-sones</div>
+
+	<script type="application/javascript">
+
+		$(document).ready(function() {
+			$("select[name=sort]").change(function() {
+				const value = $(this).val();
+				if ((value === "activity") || (value === "posts") || (value === "images")) {
+					$("select[name=order]").val("desc");
+				} else if (value === "name") {
+					$("select[name=order]").val("asc");
+				}
+			});
+			$("#sort-options select").change(function() {
+				this.form.submit();
+			});
+		});
+
+	</script>
+
+	<h1><%= Page.KnownSones.Page.Title|l10n|html></h1>
+
+	<div id="sort-options">
+		<form action="knownSones.html" method="get">
+			<div>
+				<%= Page.KnownSones.Label.Sort|l10n|html>
+				<select name="sort">
+					<option value="name"<%if sort|match value=="name"> selected="selected"<%/if>><%= Page.KnownSones.Sort.Field.Name|l10n|html></option>
+					<option value="activity"<%if sort|match value=="activity"> selected="selected"<%/if>><%= Page.KnownSones.Sort.Field.LastActivity|l10n|html></option>
+					<option value="posts"<%if sort|match value=="posts"> selected="selected"<%/if>><%= Page.KnownSones.Sort.Field.Posts|l10n|html></option>
+					<option value="images"<%if sort|match value=="images"> selected="selected"<%/if>><%= Page.KnownSones.Sort.Field.Images|l10n|html></option>
+				</select>
+				<select name="order">
+					<option value="asc"<%if order|match value=="asc"> selected="selected"<%/if>><%= Page.KnownSones.Sort.Order.Ascending|l10n|html></option>
+					<option value="desc"<%if order|match value=="desc"> selected="selected"<%/if>><%= Page.KnownSones.Sort.Order.Descending|l10n|html></option>
+				</select>
+			</div>
+			<%ifnull !currentSone>
+				<div>
+					<%= Page.KnownSones.Label.FilterSones|l10n|html>
+					<select name="filter">
+						<option value="none"></option>
+						<%ifnull !currentSone>
+							<option value="followed"<%if filter|match value=="followed"> selected="selected"<%/if>><%= Page.KnownSones.Filter.Followed|l10n|html></option>
+							<option value="not-followed"<%if filter|match value=="not-followed"> selected="selected"<%/if>><%= Page.KnownSones.Filter.NotFollowed|l10n|html></option>
+						<%/if>
+						<option value="new"<%if filter|match value=="new"> selected="selected"<%/if>><%= Page.KnownSones.Filter.New|l10n|html></option>
+						<option value="not-new"<%if filter|match value=="not-new"> selected="selected"<%/if>><%= Page.KnownSones.Filter.NotNew|l10n|html></option>
+						<option value="own"<%if filter|match value=="own"> selected="selected"<%/if>><%= Page.KnownSones.Filter.Own|l10n|html></option>
+						<option value="not-own"<%if filter|match value=="not-own"> selected="selected"<%/if>><%= Page.KnownSones.Filter.NotOwn|l10n|html></option>
+					</select>
+				</div>
+			<%/if>
+			<div>
+				<button type="submit"><%= Page.KnownSones.Button.Apply|l10n|html></button>
+			</div>
+		</form>
+	</div>
+
+	<%if !pagination.items.empty>
+		<div>
+			<form action="followSone.html" method="post">
+				<input type="hidden" name="formPassword" value="<%formPassword|html>" />
+				<input type="hidden" name="returnPage" value="<%request.uri|html>" />
+				<input type="hidden" name="sone" value="<%foreach pagination.items sone><%if !sone.friend><%if !sone.current><%sone.id> <%/if><%/if><%/foreach>" />
+				<button type="submit"><%= Page.KnownSones.Button.FollowAllSones|l10n|html></button>
+			</form>
+		</div>
+
+		<div>
+			<form action="unfollowSone.html" method="post">
+				<input type="hidden" name="formPassword" value="<%formPassword|html>" />
+				<input type="hidden" name="returnPage" value="<%request.uri|html>" />
+				<input type="hidden" name="sone" value="<%foreach pagination.items sone><%if sone.friend><%sone.id> <%/if><%/foreach>" />
+				<button type="submit"><%= Page.KnownSones.Button.UnfollowAllSones|l10n|html></button>
+			</form>
+		</div>
+	<%/if>
+
+	<div id="known-sones">
+		<%include include/pagination.html pageParameter==page>
+		<%foreach pagination.items sone>
+			<%include include/viewSone.html>
+		<%foreachelse>
+			<div><%= Page.KnownSones.Text.NoKnownSones|l10n|html></div>
+		<%/foreach>
+		<%include include/pagination.html pageParameter==page>
+	</div>
+
+<%include include/tail.html>

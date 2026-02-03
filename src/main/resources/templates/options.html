@@ -1,0 +1,175 @@
+<%include include/head.html>
+
+	<script type="application/javascript">
+		$(document).ready(function() {
+			getTranslation("WebInterface.DefaultText.Option.InsertionDelay", function(insertionDelayDefaultText) {
+				registerInputTextareaSwap("#sone #options input[name=insertion-delay]", insertionDelayDefaultText, "insertion-delay", true, true);
+			});
+			getTranslation("WebInterface.DefaultText.Option.PostsPerPage", function(postsPerPageText) {
+				registerInputTextareaSwap("#sone #options input[name=posts-per-page]", postsPerPageText, "posts-per-page", true, true);
+			});
+			getTranslation("WebInterface.DefaultText.Option.ImagesPerPage", function(imagesPerPageText) {
+				registerInputTextareaSwap("#sone #options input[name=images-per-page]", imagesPerPageText, "images-per-page", true, true);
+			});
+			getTranslation("WebInterface.DefaultText.Option.CharactersPerPost", function(postsPerPageText) {
+				registerInputTextareaSwap("#sone #options input[name=characters-per-post]", postsPerPageText, "characters-per-post", true, true);
+			});
+			getTranslation("WebInterface.DefaultText.Option.PostCutOffLength", function(postCutOffLengthText) {
+				registerInputTextareaSwap("#sone #options input[name=post-cut-off-length]", postCutOffLengthText, "post-cut-off-length", true, true);
+			});
+		});
+	</script>
+
+	<h1><%= Page.Options.Page.Title|l10n|html></h1>
+
+	<p><%= Page.Options.Page.Description|l10n|html></p>
+
+	<form id="options" method="post">
+		<input type="hidden" name="formPassword" value="<% formPassword|html>" />
+
+		<h2><%= Page.Options.Section.SoneSpecificOptions.Title|l10n|html></h2>
+
+		<%ifnull currentSone>
+			<p><%= Page.Options.Section.SoneSpecificOptions.NotLoggedIn|l10n|html|replace needle=="{link}" replacement=='<a href="login.html">'|replace needle=="{/link}" replacement=='</a>'></p>
+		<%else>
+			<p><%= Page.Options.Section.SoneSpecificOptions.LoggedIn|l10n|html></p>
+		<%/if>
+
+		<p>
+			<input type="checkbox" name="auto-follow"<%ifnull currentSone> disabled="disabled"<%/if><%if auto-follow> checked="checked"<%/if> />
+			<%= Page.Options.Option.AutoFollow.Description|l10n|html>
+		</p>
+
+		<p>
+			<input type="checkbox" name="enable-sone-insert-notifications"<%ifnull currentSone> disabled="disabled"<%/if><%if enable-sone-insert-notifications> checked="checked"<%/if> />
+			<%= Page.Options.Option.EnableSoneInsertNotifications.Description|l10n|html>
+		</p>
+
+		<p>
+			<input type="checkbox" name="show-notification-new-sones"<%ifnull currentSone> disabled="disabled"<%/if><%if show-notification-new-sones> checked="checked"<%/if>/>
+			<%= Page.Options.Option.ShowNotificationNewSones.Description|l10n|html>
+		</p>
+
+		<p>
+			<input type="checkbox" name="show-notification-new-posts"<%ifnull currentSone> disabled="disabled"<%/if><%if show-notification-new-posts> checked="checked"<%/if>/>
+			<%= Page.Options.Option.ShowNotificationNewPosts.Description|l10n|html>
+		</p>
+
+		<p>
+			<input type="checkbox" name="show-notification-new-replies"<%ifnull currentSone> disabled="disabled"<%/if><%if show-notification-new-replies> checked="checked"<%/if>/>
+			<%= Page.Options.Option.ShowNotificationNewReplies.Description|l10n|html>
+		</p>
+
+		<h2><%= Page.Options.Section.AvatarOptions.Title|l10n|html></h2>
+
+		<p><%= Page.Options.Option.ShowAvatars.Description|l10n|html></p>
+
+		<ul>
+			<li>
+				<input type="radio" name="show-custom-avatars" value="NEVER"<%if show-custom-avatars|match value==NEVER> checked="checked"<%/if>/>
+				<%=Page.Options.Option.ShowAvatars.Never.Description|l10n|html>
+			</li>
+			<li>
+				<input type="radio" name="show-custom-avatars" value="FOLLOWED"<%if show-custom-avatars|match value==FOLLOWED> checked="checked"<%/if>/>
+				<%=Page.Options.Option.ShowAvatars.Followed.Description|l10n|html>
+			</li>
+			<li>
+				<input type="radio" name="show-custom-avatars" value="MANUALLY_TRUSTED"<%if show-custom-avatars|match value==MANUALLY_TRUSTED> checked="checked"<%/if>/>
+				<%=Page.Options.Option.ShowAvatars.ManuallyTrusted.Description|l10n|html>
+			</li>
+			<li>
+				<input type="radio" name="show-custom-avatars" value="TRUSTED"<%if show-custom-avatars|match value==TRUSTED> checked="checked"<%/if>/>
+				<%=Page.Options.Option.ShowAvatars.Trusted.Description|l10n|html>
+			</li>
+			<li>
+				<input type="radio" name="show-custom-avatars" value="ALWAYS"<%if show-custom-avatars|match value==ALWAYS> checked="checked"<%/if>/>
+				<%=Page.Options.Option.ShowAvatars.Always.Description|l10n|html>
+			</li>
+		</ul>
+
+		<h2><%= Page.Options.Section.LoadLinkedImagesOptions.Title|l10n|html></h2>
+
+		<p><%= Page.Options.Option.LoadLinkedImages.Description|l10n|html></p>
+
+		<ul>
+			<li>
+				<input type="radio" name="load-linked-images" value="NEVER"<%if load-linked-images|match value==NEVER> checked="checked"<%/if>/>
+				<%=Page.Options.Option.LoadLinkedImages.Never.Description|l10n|html>
+			</li>
+			<li>
+				<input type="radio" name="load-linked-images" value="FOLLOWED"<%if load-linked-images|match value==FOLLOWED> checked="checked"<%/if>/>
+				<%=Page.Options.Option.LoadLinkedImages.Followed.Description|l10n|html>
+			</li>
+			<li>
+				<input type="radio" name="load-linked-images" value="MANUALLY_TRUSTED"<%if load-linked-images|match value==MANUALLY_TRUSTED> checked="checked"<%/if>/>
+				<%=Page.Options.Option.LoadLinkedImages.ManuallyTrusted.Description|l10n|html>
+			</li>
+			<li>
+				<input type="radio" name="load-linked-images" value="TRUSTED"<%if load-linked-images|match value==TRUSTED> checked="checked"<%/if>/>
+				<%=Page.Options.Option.LoadLinkedImages.Trusted.Description|l10n|html>
+			</li>
+			<li>
+				<input type="radio" name="load-linked-images" value="ALWAYS"<%if load-linked-images|match value==ALWAYS> checked="checked"<%/if>/>
+				<%=Page.Options.Option.LoadLinkedImages.Always.Description|l10n|html>
+			</li>
+		</ul>
+
+		<h2><%= Page.Options.Section.RuntimeOptions.Title|l10n|html></h2>
+
+		<p><%= Page.Options.Option.InsertionDelay.Description|l10n|html></p>
+		<%if =insertion-delay|in collection=fieldErrors>
+			<p class="warning"><%= Page.Options.Warnings.ValueNotChanged|l10n|html></p>
+		<%/if>
+		<p><input type="text" name="insertion-delay" value="<% insertion-delay|html>" /></p>
+
+		<p><%= Page.Options.Option.PostsPerPage.Description|l10n|html></p>
+		<%if =posts-per-page|in collection=fieldErrors>
+			<p class="warning"><%= Page.Options.Warnings.ValueNotChanged|l10n|html></p>
+		<%/if>
+		<p><input type="text" name="posts-per-page" value="<% posts-per-page|html>" /></p>
+
+		<p><%= Page.Options.Option.ImagesPerPage.Description|l10n|html></p>
+		<%if =images-per-page|in collection=fieldErrors>
+			<p class="warning"><%= Page.Options.Warnings.ValueNotChanged|l10n|html></p>
+		<%/if>
+		<p><input type="text" name="images-per-page" value="<% images-per-page|html>" /></p>
+
+		<p><%= Page.Options.Option.CharactersPerPost.Description|l10n|html></p>
+		<%if =characters-per-post|in collection=fieldErrors>
+			<p class="warning"><%= Page.Options.Warnings.ValueNotChanged|l10n|html></p>
+		<%/if>
+		<p><input type="text" name="characters-per-post" value="<% characters-per-post|html>" /></p>
+
+		<p><%= Page.Options.Option.PostCutOffLength.Description|l10n|html></p>
+		<%if =post-cut-off-length|in collection=fieldErrors>
+			<p class="warning"><%= Page.Options.Warnings.ValueNotChanged|l10n|html></p>
+		<%/if>
+		<p><input type="text" name="post-cut-off-length" value="<% post-cut-off-length|html>" /></p>
+
+		<p>
+			<input type="checkbox" name="require-full-access"<%if require-full-access> checked="checked"<%/if> />
+			<%= Page.Options.Option.RequireFullAccess.Description|l10n|html></p>
+		</p>
+
+		<h2><%= Page.Options.Section.FcpOptions.Title|l10n|html></h2>
+
+		<p><input type="checkbox" name="fcp-interface-active"<%if fcp-interface-active> checked="checked"<%/if> /> <%= Page.Options.Option.FcpInterfaceActive.Description|l10n|html></p>
+
+		<p>
+			<%= Page.Options.Option.FcpFullAccessRequired.Description|l10n|html|replace needle=="{link}" replacement=='<a href="/config/fcp">'|replace needle=="{/link}" replacement=='</a>'>
+			<select name="fcp-full-access-required">
+				<option value="0"<%if fcp-full-access-required|match value=="0"> selected="selected"<%/if>><%= Page.Options.Option.FcpFullAccessRequired.Value.No|l10n|html></option>
+				<option value="1"<%if fcp-full-access-required|match value=="1"> selected="selected"<%/if>><%= Page.Options.Option.FcpFullAccessRequired.Value.Writing|l10n|html></option>
+				<option value="2"<%if fcp-full-access-required|match value=="2"> selected="selected"<%/if>><%= Page.Options.Option.FcpFullAccessRequired.Value.Always|l10n|html></option>
+			</select>
+		</p>
+
+		<h2><%= Page.Options.Section.WebOfTrustOptions.Title|l10n|html></h2>
+
+		<p><input type="checkbox" name="strict-filtering"<%if strict-filtering> checked="checked"<%/if> /> <%= Page.Options.Option.StrictFiltering.Description|l10n|html></p>
+
+		<p><button type="submit"><%= Page.Options.Button.Save|l10n|html></button></p>
+
+	</form>
+
+<%include include/tail.html>

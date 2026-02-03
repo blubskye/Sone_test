@@ -1,0 +1,16 @@
+<%include include/head.html>
+
+	<div class="page-id hidden">view-post</div>
+	<div class="post-id hidden"><% post.id|html></div>
+
+	<%ifnull post.sone>
+		<h1><%= Page.ViewPost.Page.TitleUnknownSone|l10n|html></h1>
+
+		<p><%= Page.ViewPost.Text.UnknownPost|l10n|html></p>
+	<%else>
+		<h1><%= Page.ViewPost.Page.Title|l10n|replace needle=="{sone}" replacement=post.sone.niceName|html></h1>
+
+		<%include include/viewPost.html>
+	<%/if>
+
+<%include include/tail.html>

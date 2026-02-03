@@ -1,0 +1,244 @@
+<%include include/head.html>
+
+	<script type="application/javascript">
+		function recheckMoveButtons() {
+			$("#sone .profile-field").each(function() {
+				$(".move-up-field", this).toggleClass("hidden", $(this).prev(".profile-field").length === 0);
+				$(".move-down-field", this).toggleClass("hidden", $(this).next(".profile-field").length === 0);
+			});
+		}
+
+		$(function() {
+			getTranslation("WebInterface.DefaultText.FirstName", function(firstNameDefaultText) {
+				registerInputTextareaSwap("#sone #edit-profile input[name=first-name]", firstNameDefaultText, "first-name", true, true);
+			});
+			getTranslation("WebInterface.DefaultText.MiddleName", function(middleNameDefaultText) {
+				registerInputTextareaSwap("#sone #edit-profile input[name=middle-name]", middleNameDefaultText, "middle-name", true, true);
+			});
+			getTranslation("WebInterface.DefaultText.LastName", function(lastNameDefaultText) {
+				registerInputTextareaSwap("#sone #edit-profile input[name=last-name]", lastNameDefaultText, "last-name", true, true);
+			});
+			getTranslation("WebInterface.DefaultText.BirthDay", function(birthDayDefaultText) {
+				registerInputTextareaSwap("#sone #edit-profile input[name=birth-day]", birthDayDefaultText, "birth-day", true, true);
+			});
+			getTranslation("WebInterface.DefaultText.BirthMonth", function(birthMonthDefaultText) {
+				registerInputTextareaSwap("#sone #edit-profile input[name=birth-month]", birthMonthDefaultText, "birth-month", true, true);
+			});
+			getTranslation("WebInterface.DefaultText.BirthYear", function(birthYearDefaultText) {
+				registerInputTextareaSwap("#sone #edit-profile input[name=birth-year]", birthYearDefaultText, "birth-year", true, true);
+			});
+			getTranslation("WebInterface.DefaultText.FieldName", function(fieldNameDefaultText) {
+				registerInputTextareaSwap("#sone #add-profile-field input[name=field-name]", fieldNameDefaultText, "field-name", false, true);
+			});
+
+			<%foreach fields field>
+				registerInputTextareaSwap("#sone #edit-profile input[name=field-<% loop.count>]", <% field.key|js>, "field-<% loop.count>", true, true);
+			<%/foreach>
+
+			/* hide all the labels. */
+			$("#sone #edit-profile label, #sone #add-profile-field label").hide();
+
+			/* ajaxify the delete buttons. */
+			getTranslation("Page.EditProfile.Fields.Button.ReallyDelete", function(reallyDeleteText) {
+				$("#sone #edit-profile .delete-field-name button").each(function() {
+					const confirmButton = $(this).clone().addClass("hidden").addClass("confirm").text(reallyDeleteText).insertAfter(this);
+					(function(deleteButton, confirmButton) {
+						deleteButton.click(function() {
+							deleteButton.fadeOut("slow", function() {
+								confirmButton.fadeIn("slow");
+								$(document).one("click", function() {
+									if (this !== confirmButton.get(0)) {
+										confirmButton.fadeOut("slow", function() {
+											deleteButton.fadeIn("slow");
+										});
+									}
+									return false;
+								});
+							});
+							return false;
+						});
+						confirmButton.click(function() {
+							confirmButton.fadeOut("slow");
+							const buttonName = confirmButton.prop("name");
+							const fieldId = buttonName.substring("delete-field-".length);
+							deleteProfileField(fieldId);
+							recheckMoveButtons();
+							return false;
+						});
+					})($(this), confirmButton);
+				});
+			});
+
+			/* ajaxify the edit button. */
+			$("#sone #edit-profile .edit-field-name button").each(function() {
+				const profileField = $(this).parents(".profile-field");
+				const fieldNameElement = profileField.find(".name");
+				const inputField = $("input[type=text].short", profileField);
+				const confirmButton = $("button.confirm", profileField);
+				const cancelButton = $("button.cancel", profileField);
+				(function(editButton, inputField, confirmButton, cancelButton, fieldNameElement) {
+					const cleanUp = function(editButton, inputField, confirmButton, cancelButton, fieldNameElement) {
+						editButton.removeAttr("disabled");
+						inputField.addClass("hidden");
+						confirmButton.addClass("hidden");
+						cancelButton.addClass("hidden");
+						fieldNameElement.removeClass("hidden");
+					};
+					confirmButton.click(function() {
+						inputField.prop("disabled", "disabled");
+						confirmButton.prop("disabled", "disabled");
+						cancelButton.prop("disabled", "disabled");
+						editProfileField(confirmButton.parents(".profile-field").prop("id"), inputField.val(), function() {
+							fieldNameElement.text(inputField.val());
+							cleanUp(editButton, inputField, confirmButton, cancelButton, fieldNameElement);
+						});
+						return false;
+					});
+					cancelButton.click(function() {
+						cleanUp(editButton, inputField, confirmButton, cancelButton, fieldNameElement);
+						return false;
+					});
+					inputField.keypress(function(event) {
+						if (event.which === 13) {
+							confirmButton.click();
+							return false;
+						} else if (event.which === 27) {
+							cancelButton.click();
+							return false;
+						}
+					});
+					editButton.click(function() {
+						editButton.prop("disabled", "disabled");
+						fieldNameElement.addClass("hidden");
+						inputField.removeAttr("disabled").val(fieldNameElement.text()).removeClass("hidden").focus().select();
+						confirmButton.removeAttr("disabled").removeClass("hidden");
+						cancelButton.removeAttr("disabled").removeClass("hidden");
+						return false;
+					});
+				})($(this), inputField, confirmButton, cancelButton, fieldNameElement);
+			});
+
+			/* ajaxify “move up” and “move down” buttons. */
+			$("#sone .profile-field .move-down-field button").click(function() {
+				const profileField = $(this).parents(".profile-field");
+				moveProfileFieldDown(profileField.prop("id"), function() {
+					profileField.insertAfter(profileField.next());
+					recheckMoveButtons();
+				});
+				return false;
+			});
+			$("#sone .profile-field .move-up-field button").click(function() {
+				const profileField = $(this).parents(".profile-field");
+				moveProfileFieldUp(profileField.prop("id"), function() {
+					profileField.insertBefore(profileField.prev());
+					recheckMoveButtons();
+				});
+				return false;
+			});
+		});
+	</script>
+
+	<h1><%= Page.EditProfile.Page.Title|l10n|html></h1>
+
+	<p><%= Page.EditProfile.Page.Description|l10n|html></p>
+	<p><%= Page.EditProfile.Page.Hint.Optionality|l10n|html></p>
+
+	<form id="edit-profile" method="post">
+		<input type="hidden" name="formPassword" value="<% formPassword|html>" />
+
+		<div>
+			<label for="first-name"><%= Page.EditProfile.Label.FirstName|l10n|html></label>
+			<input type="text" name="first-name" value="<% firstName|html>" />
+		</div>
+
+		<div>
+			<label for="middle-name"><%= Page.EditProfile.Label.MiddleName|l10n|html></label>
+			<input type="text" name="middle-name" value="<% middleName|html>" />
+		</div>
+
+		<div>
+			<label for="last-name"><%= Page.EditProfile.Label.LastName|l10n|html></label>
+			<input type="text" name="last-name" value="<% lastName|html>" />
+		</div>
+
+		<h1><%= Page.EditProfile.Birthday.Title|l10n|html></h1>
+
+		<div id="birth-day">
+			<label for="birth-day"><%= Page.EditProfile.Birthday.Label.Day|l10n|html></label>
+			<input type="text" name="birth-day" value="<% birthDay|html>" />
+		</div>
+
+		<div id="birth-month">
+			<label for="birth-month"><%= Page.EditProfile.Birthday.Label.Month|l10n|html></label>
+			<input type="text" name="birth-month" value="<% birthMonth|html>" />
+		</div>
+
+		<div id="birth-year">
+			<label for="birth-year"><%= Page.EditProfile.Birthday.Label.Year|l10n|html></label>
+			<input type="text" name="birth-year" value="<% birthYear|html>" />
+		</div>
+
+		<h1><%= Page.EditProfile.Avatar.Title|l10n|html></h1>
+
+		<p><%= Page.EditProfile.Avatar.Description|l10n|html></p>
+
+		<ul id="avatar-selection">
+			<li id="no-avatar">
+				<input type="radio" name="avatarId" value="none"<%ifnull avatarId> checked="checked"<%/if>/>
+				<%= Page.EditProfile.Avatar.Delete|l10n|html>
+			</li>
+			<%foreach currentSone.allImages image>
+				<li>
+					<input type="radio" name="avatarId" value="<%image.id|html>"<%if avatarId|match value=image.id> checked="checked"<%/if>/>
+					<div class="post-avatar"><% image|image-link max-width==48 max-height==48 mode==enlarge title=image.title></div>
+				</li>
+			<%/foreach>
+		</ul>
+
+		<div>
+			<button type="submit" name="save-profile" value="true"><%= Page.EditProfile.Button.Save|l10n|html></button>
+		</div>
+
+		<h1><%= Page.EditProfile.Fields.Title|l10n|html></h1>
+
+		<p><%= Page.EditProfile.Fields.Description|l10n|html></p>
+
+		<%foreach fields field fieldLoop>
+			<div class="profile-field" id="<% field.id|html>">
+				<div class="name"><% field.name|html></div>
+				<input class="short hidden" type="text"><button class="edit confirm hidden" type="button">✔</button><button class="cancel hidden" type="button">✘</button>
+				<div class="edit-field-name"><button type="submit" name="edit-field-<% field.id|html>" value="true"><%= Page.EditProfile.Fields.Button.Edit|l10n|html></button></div>
+				<div class="delete-field-name"><button type="submit" name="delete-field-<% field.id|html>" value="true"><%= Page.EditProfile.Fields.Button.Delete|l10n|html></button></div>
+				<div class="<%if fieldLoop.last>hidden <%/if>move-down-field"><button type="submit" name="move-down-field-<% field.id|html>" value="true"><%= Page.EditProfile.Fields.Button.MoveDown|l10n|html></button></div>
+				<div class="<%if fieldLoop.first>hidden <%/if>move-up-field"><button type="submit" name="move-up-field-<% field.id|html>" value="true"><%= Page.EditProfile.Fields.Button.MoveUp|l10n|html></button></div>
+				<div class="value"><input type="text" name="field-<% field.id|html>" value="<% field.value|html>" /></div>
+			</div>
+
+			<%if fieldLoop.last>
+				<div>
+					<button type="submit" name="save-profile" value="true"><%= Page.EditProfile.Button.Save|l10n|html></button>
+				</div>
+			<%/if>
+		<%/foreach>
+
+	</form>
+
+	<form id="add-profile-field" method="post">
+		<input type="hidden" name="formPassword" value="<% formPassword|html>" />
+
+		<a name="profile-fields"></a>
+		<h2><%= Page.EditProfile.Fields.AddField.Title|l10n|html></h2>
+
+		<%if duplicateFieldName>
+			<p><%= Page.EditProfile.Error.DuplicateFieldName|l10n|replace needle=="{fieldName}" replacement=fieldName|html></p>
+		<%/if>
+
+		<div id="new-field">
+			<label for="new-field"><%= Page.EditProfile.Fields.AddField.Label.Name|l10n|html></label>
+			<input type="text" name="field-name" value="" />
+			<button type="submit" name="add-field" value="true"><%= Page.EditProfile.Fields.AddField.Button.AddField|l10n|html></button>
+		</div>
+
+	</form>
+
+<%include include/tail.html>

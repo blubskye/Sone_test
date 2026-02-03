@@ -1,0 +1,65 @@
+<div id="sone">
+
+	<div id="formPassword"><% formPassword|html></div>
+	<div id="currentSoneId" class="hidden"><% currentSone.id|html></div>
+	<div id="loggedIn" class="hidden"><%ifnull !currentSone>true<%else>false<%/if></div>
+
+	<script src="javascript/jquery-3.4.1.js" language="javascript"></script>
+	<script src="javascript/jquery.url.js" language="javascript"></script>
+	<script src="javascript/jquery.fieldselection.js" language="javascript"></script>
+	<script src="javascript/sone.js" language="javascript"></script>
+
+	<div id="offline-marker"></div>
+
+	<div id="main">
+
+		<div id="notification-area">
+
+			<div id="notification-hash" class="hidden"><% notificationHash|html></div>
+
+			<form id="notification-dismiss-template" class="hidden dismiss" action="dismissNotification.html" method="post">
+				<input type="hidden" name="formPassword" value="<% formPassword|html>" />
+				<input type="hidden" name="returnPage" value="<% request.uri|html>" />
+				<input type="hidden" name="notification" value="" />
+				<button type="submit"><%= Notification.Button.Dismiss|l10n|html></button>
+			</form>
+
+			<%foreach notifications notification>
+				<div class="notification" id="<% notification.id|html>" lastUpdatedTime="<%notification.lastUpdatedTime|html>">
+					<%if notification.dismissable>
+						<form class="dismiss" action="dismissNotification.html" method="post">
+							<input type="hidden" name="formPassword" value="<% formPassword|html>" />
+							<input type="hidden" name="returnPage" value="<% request.uri|html>" />
+							<input type="hidden" name="notification" value="<% notification.id|html>" />
+							<button type="submit"><%= Notification.Button.Dismiss|l10n|html></button>
+						</form>
+					<%/if>
+					<%include notification>
+				</div>
+			<%/foreach>
+		</div>
+
+		<div id="profile" class="<%ifnull currentSone>offline<%else>online<%/if>">
+			<div class="avatar profile-avatar">
+				<a class="picture" href="index.html">
+					<%ifnull !currentSone>
+						<%ifnull !currentSone.profile.avatar>
+							<%currentSone.profile.avatar|image-link max-width==80 max-height==80 mode==enlarge title=="Profile Avatar">
+						<%else>
+							<img src="/WebOfTrust/GetIdenticon?identity=<% currentSone.id|html>&amp;width=80&amp;height=80" width="80" height="80" alt="Profile Avatar" />
+						<%/if>
+					<%else>
+						<img src="images/sone.png" width="80" height="80" alt="Sone is offline" />
+					<%/if>
+				</a>
+			</div>
+			<%ifnull ! currentSone>
+				<div id="home-sone">
+					<%include include/viewSone.html sone=currentSone>
+				</div>
+			<%/if>
+			<form id="search" action="search.html" method="get">
+				<input type="text" name="query" value="" />
+				<button type="submit"><%= View.Search.Button.Search|l10n|html></button>
+			</form>
+		</div>

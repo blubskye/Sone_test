@@ -1,0 +1,46 @@
+<div class="sone <% sone.status|html><%if sone.modified> modified<%/if> <% sone.id|css|html><%if sone.local> local<%/if><%if sone.new> new<%/if>">
+	<div class="id hidden"><% sone.id|html></div>
+	<div class="unknown-marker" title="<%= View.Sone.Status.Unknown|l10n|html>">?</div>
+	<div class="modified-marker" title="<%= View.Sone.Status.Modified|l10n|html>">!</div>
+	<div class="download-marker" title="<%= View.Sone.Status.Downloading|l10n|html>">⬊</div>
+	<div class="insert-marker" title="<%= View.Sone.Status.Inserting|l10n|html>">⬈</div>
+	<div class="idle-marker" title="<%= View.Sone.Status.Idle|l10n|html>">✔</div>
+	<div class="last-update"><%= View.Sone.Label.LastUpdate|l10n|html> <span class="time" title="<% sone.time|unknown|date format=="MMM d, yyyy, HH:mm:ss">"><%sone.lastUpdatedText|l10n|html></span></div>
+	<div>
+		<div class="profile-link"><a href="viewSone.html?sone=<% sone.id|html>" title="<% sone.requestUri|html>"><% sone.niceName|html></a></div>
+		<div class="sone-stats">(<%= View.Sone.Stats.Posts|l10n 0=sone.posts.size>, <%= View.Sone.Stats.Replies|l10n 0=sone.replies.size><%if ! sone.allImages.size|match value==0>, <%= View.Sone.Stats.Images|l10n 0=sone.allImages.size><%/if>)</div>
+	</div>
+	<div class="short-request-uri"><% sone.id|html></div>
+	<div class="hidden"><% sone.blacklisted></div>
+	<%if sone.local>
+		<form class="lock<%if sone.locked> hidden<%/if>" action="lockSone.html" method="post">
+			<input type="hidden" name="formPassword" value="<% formPassword|html>" />
+			<input type="hidden" name="sone" value="<% sone.id|html>" />
+			<input type="hidden" name="returnPage" value="<% request.uri|html>" />
+			<button type="submit" title="<%= View.Sone.Button.LockSone.Tooltip|l10n|html>"><%= View.Sone.Button.LockSone|l10n|html></button>
+		</form>
+		<form class="unlock<%if !sone.locked> hidden<%/if>" action="unlockSone.html" method="post">
+			<input type="hidden" name="formPassword" value="<% formPassword|html>" />
+			<input type="hidden" name="sone" value="<% sone.id|html>" />
+			<input type="hidden" name="returnPage" value="<% request.uri|html>" />
+			<button type="submit" title="<%= View.Sone.Button.UnlockSone.Tooltip|l10n|html>"><%= View.Sone.Button.UnlockSone|l10n|html></button>
+		</form>
+	<%/if>
+	<%if ! sone.current>
+		<%ifnull ! currentSone>
+			<form class="unfollow<%if ! sone.friend> hidden<%/if>" action="unfollowSone.html" method="post">
+				<input type="hidden" name="formPassword" value="<% formPassword|html>" />
+				<input type="hidden" name="sone" value="<% sone.id|html>" />
+				<input type="hidden" name="returnPage" value="<% request.uri|html>" />
+				<button type="submit"><%= View.Sone.Button.UnfollowSone|l10n|html></button>
+			</form>
+			<form class="follow<%if sone.friend> hidden<%/if>" action="followSone.html" method="post">
+				<input type="hidden" name="formPassword" value="<% formPassword|html>" />
+				<input type="hidden" name="sone" value="<% sone.id|html>" />
+				<input type="hidden" name="returnPage" value="<% request.uri|html>" />
+				<button type="submit"><%= View.Sone.Button.FollowSone|l10n|html></button>
+			</form>
+		<%/if>
+	<%/if>
+	<div class="spacer">&nbsp;</div>
+</div>

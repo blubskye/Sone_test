@@ -1,0 +1,28 @@
+<div class="sone-menu <% class|css|html>">
+	<div class="sone-menu-id hidden"><%sone.id|html></div>
+	<div class="avatar menu-avatar">
+		<%ifnull !sone.profile.avatar>
+			<%sone.profile.avatar|image-link max-width==64 max-height==64 mode==enlarge title=sone.niceName>
+		<%else>
+			<img src="/WebOfTrust/GetIdenticon?identity=<%sone.id|html>&amp;width=128&amp;height=128" width="64" height="64" alt="Avatar Image" />
+		<%/if>
+	</div>
+	<div class="inner-menu">
+		<div>
+			<a class="author" href="viewSone.html?sone=<%sone.id|html>"><%sone.niceName|html></a>
+			(<%= View.Sone.Stats.Posts|l10n 0=sone.posts.size>, <%= View.Sone.Stats.Replies|l10n 0=sone.replies.size><%if ! sone.allImages.size|match value==0>, <%= View.Sone.Stats.Images|l10n 0=sone.allImages.size><%/if><%if core.debug>, <% sone.client|html><%/if>)
+		</div>
+		<div><a href="/WebOfTrust/ShowIdentity?id=<%sone.id|html>">» <% =View.SoneMenu.WebOfTrustLink|l10n|html></a></div>
+		<%foreach sone.albums album>
+			<%first>
+				<div><a href="imageBrowser.html?sone=<% sone.id|html>">» <% =View.SoneMenu.Link.AllAlbums|l10n|html></a></div>
+			<%/first>
+		<%/foreach>
+		<%if !sone.local>
+			<div>
+				<button class="follow<%if sone.friend> hidden<%/if>"><%= View.Sone.Button.FollowSone|l10n|html></button>
+				<button class="unfollow<%if !sone.friend> hidden<%/if>"><%= View.Sone.Button.UnfollowSone|l10n|html></button>
+			</div>
+		<%/if>
+	</div>
+</div>

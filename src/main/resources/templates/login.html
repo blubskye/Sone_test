@@ -1,0 +1,22 @@
+<%include include/head.html>
+
+	<div class="page-id hidden">login</div>
+
+	<%if !sones.empty>
+		<h1><%= Page.Login.Page.Title|l10n|html></h1>
+		<form method="post">
+			<input type="hidden" name="formPassword" value="<% formPassword|html>" />
+			<label for="sone-id"><%= Page.Login.Label.SelectSone|l10n|html></label>
+			<select name="sone-id">
+				<option disabled="disabled"><%= Page.Login.Option.NoSone|l10n|html></option>
+				<%foreach sones sone>
+					<option value="<% sone.id|html>"><% sone.niceName|html> (<% sone.name|html>)</option>
+				<%/foreach>
+			</select>
+			<button type="submit">Select</button>
+		</form>
+	<%/if>
+
+	<%include include/createSone.html>
+
+<%include include/tail.html>
