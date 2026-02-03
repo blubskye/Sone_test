@@ -22,7 +22,7 @@ class CreateSonePage @Inject constructor(webInterface: WebInterface, loaders: Lo
 
 	override fun handleRequest(soneRequest: SoneRequest, templateContext: TemplateContext) {
 		templateContext["sones"] = soneRequest.core.localSones.sortedWith(niceNameComparator)
-		templateContext["identitiesWithoutSone"] = soneRequest.core.identityManager.allOwnIdentities.filterNot { "Sone" in it.contexts }.sortedBy { "${it.nickname}@${it.id}".lowercase() }
+		templateContext["identitiesWithoutSone"] = soneRequest.core.identityManager.allOwnIdentities.filterNot { "Sone" in it.contexts }.sortedBy { "${it.nickname}@${it.id}".toLowerCase() }
 		if (soneRequest.isPOST) {
 			val identity = soneRequest.httpRequest.getPartAsStringFailsafe("identity", 43)
 			soneRequest.core.identityManager.allOwnIdentities.firstOrNull { it.id == identity }?.let { ownIdentity ->

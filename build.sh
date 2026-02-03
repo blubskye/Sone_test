@@ -4,18 +4,10 @@
 
 set -e
 
-# Use Java 21 (Kotlin doesn't support Java 25 yet)
-export JAVA_HOME=/usr/lib/jvm/java-21-openjdk
-export PATH="$JAVA_HOME/bin:$PATH"
-
 echo "Building Sone plugin..."
-echo "Using Java: $(java -version 2>&1 | head -1)"
 
-# Stop any existing Gradle daemons that might be using wrong Java version
-./gradlew --stop 2>/dev/null || true
-
-# Run the Gradle build (skip tests for faster build, no daemon to avoid version issues)
-./gradlew fatJar -x test -x parallelTest -x notParallelTest --no-daemon
+# Run the Gradle build
+./gradlew fatJar
 
 echo ""
 echo "Build complete!"

@@ -41,11 +41,7 @@ import freenet.support.api.*;
 import com.google.common.annotations.*;
 import com.google.common.eventbus.*;
 import com.google.common.cache.*;
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Key;
-import com.google.inject.Module;
+import com.google.inject.*;
 import com.google.inject.name.*;
 import kotlin.jvm.functions.*;
 
