@@ -32,5 +32,5 @@ val FreenetRequest.headers get() = Headers(httpRequest)
 val HTTPRequest.headers get() = Headers(this)
 
 class Headers(private val request: HTTPRequest) {
-	operator fun get(name: String): String? = request.getHeader(name.toLowerCase())
+	operator fun get(name: String): String? = request.getHeader(name.lowercase())
 }

@@ -1,9 +1,9 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.3.70'
-    id 'org.jetbrains.kotlin.plugin.noarg' version '1.3.70'
-    id 'info.solidsoft.pitest' version '1.4.5'
+    id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '2.1.0'
+    id 'org.jetbrains.kotlin.plugin.noarg' version '2.1.0'
+    id 'jacoco'
+    id 'idea'
 }
 
 group = 'net.pterodactylus'
@@ -14,52 +14,56 @@ repositories {
      maven { url "https://maven.pterodactylus.net/" }
 }
 
-apply plugin: 'java'
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
 
 tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
 }
 
-tasks.withType(KotlinCompile) {
-    kotlinOptions {
-        jvmTarget = "1.8"
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_1_8)
     }
 }
 
 configurations {
-    provided {
-        dependencies.all { dep ->
-            configurations.default.exclude group: dep.group, module: dep.name
-        }
+    // Create a resolvable configuration that mirrors compileOnly for exclusion in fatJar
+    providedRuntime {
+        canBeResolved = true
+        canBeConsumed = false
     }
-    compile.extendsFrom provided
 }
 
 dependencies {
-    provided group: 'org.freenetproject', name: 'fred', version: '0.7.5.1475'
-    provided group: 'org.freenetproject', name: 'freenet-ext', version: '29'
-    provided group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.54'
+    compileOnly group: 'org.freenetproject', name: 'fred', version: '0.7.5.1475'
+    compileOnly group: 'org.freenetproject', name: 'freenet-ext', version: '29'
+    compileOnly group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.54'
 
-    compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8'
-    compile group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.3.0-RC'
+    // Mirror compileOnly in resolvable config for fatJar exclusion
+    providedRuntime group: 'org.freenetproject', name: 'fred', version: '0.7.5.1475'
+    providedRuntime group: 'org.freenetproject', name: 'freenet-ext', version: '29'
+    providedRuntime group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.54'
 
-    compile group: 'net.pterodactylus', name: 'utils', version: '0.13.1'
-    compile group: 'com.google.inject', name: 'guice', version: '4.2.2'
-    compile group: 'com.google.guava', name: 'guava', version: '27.0.1-jre'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.1'
-    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.1'
-    compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
-    compile group: 'org.jsoup', name: 'jsoup', version: '1.10.2'
-    compile group: 'io.dropwizard.metrics', name: 'metrics-core', version: '4.1.0'
-    compile group: 'javax.activation', name: 'javax.activation-api', version: '1.2.0'
+    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8'
+    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.7.3'
 
-    testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-test-junit'
-    testCompile group: 'junit', name: 'junit', version: '4.11'
-    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.28.2'
-    testCompile group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
+    implementation group: 'net.pterodactylus', name: 'utils', version: '0.13.1'
+    implementation group: 'com.google.inject', name: 'guice', version: '4.2.2'
+    implementation group: 'com.google.guava', name: 'guava', version: '27.0.1-jre'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.1'
+    implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.1'
+    implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+    implementation group: 'org.jsoup', name: 'jsoup', version: '1.10.2'
+    implementation group: 'io.dropwizard.metrics', name: 'metrics-core', version: '4.1.0'
+    implementation group: 'javax.activation', name: 'javax.activation-api', version: '1.2.0'
+
+    testImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-test-junit'
+    testImplementation group: 'junit', name: 'junit', version: '4.11'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '2.28.2'
+    testImplementation group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
 }
 
 apply from: 'version.gradle'
@@ -86,7 +90,8 @@ test {
 
 task fatJar(type: Jar) {
     archiveFileName = project.name.toLowerCase() + '-jar-with-dependencies.jar'
-    from { (configurations.runtime - configurations.provided).collect { it.isDirectory() ? it : zipTree(it) } }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from { (configurations.runtimeClasspath - configurations.providedRuntime).collect { it.isDirectory() ? it : zipTree(it) } }
     manifest {
         attributes('Plugin-Main-Class': 'net.pterodactylus.sone.main.SonePlugin')
     }
@@ -97,34 +102,17 @@ javadoc {
     options {
         quiet()
         showFromPrivate()
-        footer('© 2010–2013 David ‘Bombe’ Roden')
+        footer('© 2010–2013 David \'Bombe\' Roden')
         links('http://docs.oracle.com/javase/7/docs/api/')
     }
     failOnError = false
 }
 
-apply plugin: 'jacoco'
-
 jacoco {
-    toolVersion = '0.8.4'
+    toolVersion = '0.8.11'
 }
 
 jacocoTestReport.dependsOn test
-
-pitest {
-    pitestVersion = '1.4.10'
-    outputFormats = ['HTML', 'XML']
-    timestampedReports = false
-    timeoutFactor = 3.0
-}
-
-apply plugin: 'findbugs'
-
-findbugs {
-    ignoreFailures = true
-}
-
-apply plugin: 'idea'
 
 task countLinesMain(type: Exec) {
     executable = 'cloc'
@@ -139,7 +127,9 @@ task countLinesTest(type: Exec) {
 }
 
 task countLines {
-    new File(buildDir, "reports/cloc").mkdirs()
+    doFirst {
+        new File(layout.buildDirectory.asFile.get(), "reports/cloc").mkdirs()
+    }
     dependsOn tasks.countLinesMain
     dependsOn tasks.countLinesTest
 }
