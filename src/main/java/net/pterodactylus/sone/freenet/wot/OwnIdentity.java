@@ -24,9 +24,10 @@ package net.pterodactylus.sone.freenet.wot;
 public interface OwnIdentity extends Identity {
 
 	/**
-	 * Returns the insert URI of the identity.
+	 * Returns the insert URI of the identity, or {@code null} if unavailable
+	 * (e.g. WoT no longer exposes it over FCP for security reasons).
 	 *
-	 * @return The insert URI of the identity
+	 * @return The insert URI, or {@code null}
 	 */
 	public String getInsertUri();
 

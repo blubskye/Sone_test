@@ -1,24 +1,20 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-		classpath group: "org.ajoberstar", name: "gradle-git", version: "1.3.0"
-    }
-}
-
-import org.ajoberstar.grgit.Grgit
-
 task(writeVersion) {
     doLast {
-        def grgit = Grgit.open(dir: project.rootDir)
-        def version = grgit.resolve.toCommit("HEAD").id
-        def niceVersion = grgit.describe()
-        grgit.close()
+        def commitId   = "unknown"
+        def niceVersion = "v82-local"
+        try {
+            def idProc = ["git", "rev-parse", "HEAD"].execute([], project.rootDir)
+            idProc.waitFor()
+            if (idProc.exitValue() == 0) { commitId = idProc.text.trim() }
 
-        new File("src/generated/resources").mkdirs()
+            def descProc = ["git", "describe", "--always", "--tags"].execute([], project.rootDir)
+            descProc.waitFor()
+            if (descProc.exitValue() == 0) { niceVersion = descProc.text.trim() }
+        } catch (Exception ignored) {}
+
+        project.file("src/generated/resources").mkdirs()
         project.file("src/generated/resources/version.yaml").withWriter { out ->
-            out.println "id: ${version}"
+            out.println "id: ${commitId}"
             out.println "nice: ${niceVersion}"
         }
     }
@@ -35,4 +31,3 @@ sourceSets {
 processResources {
     dependsOn(writeVersion)
 }
-

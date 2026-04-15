@@ -44,7 +44,7 @@ class GetTimesAjaxPage @Inject constructor(webInterface: WebInterface,
 					"tooltip" to synchronized(dateTimeFormatter) {
 						dateTimeFormatter.format(time)
 					})
-		}.forEach { this@jsonObject.set(it.first, it.second) }
+		}.forEach { (key: String, value: com.fasterxml.jackson.databind.node.ObjectNode) -> this@jsonObject.replace(key, value) }
 	}
 
 }

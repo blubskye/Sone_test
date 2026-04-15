@@ -84,15 +84,15 @@ class SearchPage(webInterface: WebInterface, loaders: Loaders, templateRenderer:
 			}
 
 	private fun Sone.allText(soneNameCache: (Sone) -> String) =
-			(soneNameCache(this) + profile.fields.map { "${it.name} ${it.value}" }.joinToString(" ", " ")).toLowerCase()
+			(soneNameCache(this) + profile.fields.map { "${it.name} ${it.value}" }.joinToString(" ", " ")).lowercase()
 
 	private fun Post.allText(soneNameCache: (Sone) -> String, getReplies: (String) -> Collection<PostReply>) =
 			(text + recipient.orNull()?.let { " ${soneNameCache(it)}" } + getReplies(id)
 					.filter(noFutureReply)
-					.map { "${soneNameCache(it.sone)} ${it.text}" }.joinToString(" ", " ")).toLowerCase()
+					.map { "${soneNameCache(it.sone)} ${it.text}" }.joinToString(" ", " ")).lowercase()
 
 	private fun Iterable<Phrase>.indicesFor(text: String, predicate: (Phrase) -> Boolean) =
-			filter(predicate).map(Phrase::phrase).map(String::toLowerCase).flatMap { text.findAll(it) }
+			filter(predicate).map(Phrase::phrase).map(String::lowercase).flatMap { text.findAll(it) }
 
 	private fun score(text: String, phrases: Iterable<Phrase>): Double {
 		val requiredPhrases = phrases.count { it.required }

@@ -40,7 +40,12 @@ class PluginWebOfTrustConnector @Inject constructor(private val pluginConnector:
 	override fun loadAllOwnIdentities(): Set<OwnIdentity> =
 			performRequest(SimpleFieldSetBuilder().put("Message", "GetOwnIdentities").get())
 					.fields
-					.parseIdentities { parseOwnIdentity(it) }
+					.parseIdentities { index ->
+						val identityId = get("Identity$index")
+						val insertUri = this@PluginWebOfTrustConnector.fetchInsertUri(identityId)
+						DefaultOwnIdentity(identityId, get("Nickname$index"), get("RequestURI$index"), insertUri)
+								.setContextsAndProperties(this, index)
+					}
 
 	@Throws(PluginException::class)
 	override fun loadTrustedIdentities(ownIdentity: OwnIdentity, context: String?): Set<Identity> =
@@ -78,6 +83,15 @@ class PluginWebOfTrustConnector @Inject constructor(private val pluginConnector:
 		performRequest(SimpleFieldSetBuilder().put("Message", "Ping").get())
 	}
 
+	private fun fetchInsertUri(identityId: String): String? = try {
+		performRequest(
+				SimpleFieldSetBuilder().put("Message", "GetInsertURI").put("Identity", identityId).get()
+		).fields.get("InsertURI")
+	} catch (e: PluginException) {
+		logger.log(Level.WARNING, "Could not retrieve InsertURI for identity $identityId: ${e.message}")
+		null
+	}
+
 	private fun performRequest(fields: SimpleFieldSet): PluginReply {
 		logger.log(Level.FINE, format("Sending FCP Request: %s", fields.get("Message")))
 		return runBlocking {
@@ -98,10 +112,6 @@ private fun <I> SimpleFieldSet.parseIdentities(parser: SimpleFieldSet.(Int) -> I
 		scanPrefix { "Identity$it" }
 				.map { parser(this, it) }
 				.toSet()
-
-private fun SimpleFieldSet.parseOwnIdentity(index: Int) =
-		DefaultOwnIdentity(get("Identity$index"), get("Nickname$index"), get("RequestURI$index"), get("InsertURI$index"))
-				.setContextsAndProperties(this@parseOwnIdentity, index)
 
 private fun SimpleFieldSet.parseTrustedIdentity(index: Int, ownIdentity: OwnIdentity) =
 		DefaultIdentity(get("Identity$index"), get("Nickname$index"), get("RequestURI$index"))

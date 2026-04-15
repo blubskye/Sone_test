@@ -5,3 +5,7 @@
 /build/
 
 sone.properties
+
+# Local audit/patch docs — not for upstream
+AUDIT*.md
+docs/security/

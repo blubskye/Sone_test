@@ -21,9 +21,9 @@ package net.pterodactylus.sone.freenet.wot
  * An own identity is an identity that the owner of the node has full control
  * over.
  */
-class DefaultOwnIdentity(id: String, nickname: String, requestUri: String, private val insertUri: String) : DefaultIdentity(id, nickname, requestUri), OwnIdentity {
+class DefaultOwnIdentity(id: String, nickname: String?, requestUri: String, private val insertUri: String?) : DefaultIdentity(id, nickname, requestUri), OwnIdentity {
 
-	override fun getInsertUri(): String {
+	override fun getInsertUri(): String? {
 		return insertUri
 	}
 

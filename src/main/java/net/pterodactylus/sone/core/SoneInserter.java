@@ -234,7 +234,12 @@ public class SoneInserter extends AbstractService {
 						long insertTime = currentTimeMillis();
 						eventBus.post(new SoneInsertingEvent(sone));
 						Stopwatch stopwatch = Stopwatch.createStarted();
-						FreenetURI finalUri = freenetInterface.insertDirectory(soneUriCreator.getInsertUri(sone), insertInformation.generateManifestEntries(), "index.html");
+						FreenetURI soneInsertUri = soneUriCreator.getInsertUri(sone);
+						if (soneInsertUri == null) {
+							logger.log(Level.WARNING, "Cannot insert Sone \"{0}\": insert URI not available (WoT FCP no longer exposes private keys).", sone.getName());
+							break;
+						}
+						FreenetURI finalUri = freenetInterface.insertDirectory(soneInsertUri, insertInformation.generateManifestEntries(), "index.html");
 						stopwatch.stop();
 						soneInsertDurationHistogram.update(stopwatch.elapsed(MICROSECONDS));
 						eventBus.post(new SoneInsertedEvent(sone, stopwatch.elapsed(MILLISECONDS), insertInformation.getFingerprint()));
